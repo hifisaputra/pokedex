@@ -7,20 +7,12 @@ export interface Pokemon {
   url: string
   sprites: {
     front_default?: string
-  }
-}
-
-/**
- * @description Method to get the pokemon id from url
- *
- * @param {string} url
- * @returns
- */
-const getIdFromUrl = (url: string) => {
-  const match = url.match(/phrase=(.*)/)
-  if(match !== null) {
-    return match[1].replace('/', '')
-  }
+  },
+  types: {
+    type: {
+      name: string
+    }
+  }[]
 }
 
 export const useFetchPokemon = () => {
@@ -52,8 +44,6 @@ export const useFetchPokemon = () => {
     // we will only get the ones that are being displayed so that
     // the app does not run slow.
     if (response) {
-      result.response = response
-
       const promises = response.results.map((item) => apiCall<Pokemon>({
         url: item.url,
         method: 'GET'
@@ -65,8 +55,9 @@ export const useFetchPokemon = () => {
       pokemonData.forEach(({ response }) => {
         if(response) data.push(response)
       })
+      response.results = data
 
-      result.response.results = data
+      result.response = response
     }
     result.loading = false
 

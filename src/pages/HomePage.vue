@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import TypeFilter from '../components/TypeFilter.vue'
 import { useFetchPokemon } from '../composable/api/pokemonApi'
+import TypeFilter from '../components/TypeFilter.vue'
+import PokemonCard from '../components/PokemonCard.vue'
 
 const { loading, response, call } = useFetchPokemon()
 
@@ -45,13 +46,7 @@ onMounted(() => {
       </div>
 
       <div class="grid grid-cols-3 gap-2">
-        <div v-for="pokemon in response?.results" :key="pokemon.name" class="bg-gray-300 rounded-md">
-          <img :src="pokemon.sprites.front_default" alt="" class="mx-auto mt-2">
-          <div class="px-2 pb-2">
-            <span class="text-xs text-gray-500">#{{ ('000' + pokemon.id).slice(-4) }}</span>
-            <h5 class="capitalize font-medium text-sm">{{ pokemon.name }}</h5>
-          </div>
-        </div>
+        <PokemonCard v-for="pokemon in response?.results" :key="pokemon.name" :pokemon="pokemon" />
       </div>
     </div>
   </div>
