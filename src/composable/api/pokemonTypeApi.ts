@@ -1,19 +1,32 @@
-import { useApi, FetchResponse } from "../useApi";
+import { reactive, toRefs } from 'vue'
+import { RequestError, FetchResponse, apiCall } from '../../lib/axios'
 
 export interface PokemonType {
-  name: string;
-  url: string;
+  name: string
+  url: string
 }
 
-export const usePokemonTypeApi = () => {
-  const { call, ...result } = useApi<FetchResponse<PokemonType>>();
+export const useFetchType = () => {
+  const result = reactive<{
+    loading: boolean
+    error: RequestError | null
+    response: FetchResponse<PokemonType> | null
+  }>({
+    loading: false,
+    error: null,
+    response: null
+  })
 
-  const fetch = () => {
-    call({
-      url: "/type",
-      method: "GET",
-    });
-  };
+  const call = async () => {
+    result.loading = true
+    const { error, response } = await apiCall<FetchResponse<PokemonType>>({
+      url: '/type',
+      method: 'GET'
+    })
 
-  return { ...result, fetch };
-};
+    if (error) result.error = error
+    if (response) result.response = response
+  }
+
+  return { ...toRefs(result), call }
+}
