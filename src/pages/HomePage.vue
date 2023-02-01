@@ -46,7 +46,11 @@ onMounted(() => {
       </div>
 
       <div class="grid grid-cols-3 gap-2">
-        <PokemonCard v-for="pokemon in response?.results" :key="pokemon.name" :pokemon="pokemon" />
+        <PokemonCard
+          v-for="pokemon in response?.results"
+          :key="pokemon.name"
+          :pokemon="pokemon"
+        />
       </div>
     </div>
   </div>

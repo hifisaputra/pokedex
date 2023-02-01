@@ -7,7 +7,7 @@ export interface Pokemon {
   url: string
   sprites: {
     front_default?: string
-  },
+  }
   types: {
     type: {
       name: string
@@ -44,16 +44,18 @@ export const useFetchPokemon = () => {
     // we will only get the ones that are being displayed so that
     // the app does not run slow.
     if (response) {
-      const promises = response.results.map((item) => apiCall<Pokemon>({
-        url: item.url,
-        method: 'GET'
-      }))
+      const promises = response.results.map((item) =>
+        apiCall<Pokemon>({
+          url: item.url,
+          method: 'GET'
+        })
+      )
 
       const pokemonData = await Promise.all(promises)
 
       const data: Pokemon[] = []
       pokemonData.forEach(({ response }) => {
-        if(response) data.push(response)
+        if (response) data.push(response)
       })
       response.results = data
 

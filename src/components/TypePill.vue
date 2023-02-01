@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+type Size = 'small' | 'big'
+
 const props = defineProps<{
   class?: string
-  active?: boolean,
+  active?: boolean
   name: string
+  onClick?: () => void
+  size?: Size
 }>()
 
 const cssClass = computed(() => props.class)
@@ -51,17 +55,22 @@ const getTypeBgColor = (type: string) => {
   }
 }
 
-const emit = defineEmits(['update:modelValue'])
+const getSize = () => {
+  if (props.size === 'big') return 'rounded-md px-4 py-2 text-sm '
+
+  return 'rounded-sm px-2 py-0 text-xs '
+}
 </script>
 
 <template>
-    <a
-      href="#"
-      :class="`${getTypeBgColor(name)} ${cssClass}`"
-      class="rounded-md px-2 py-0 text-center text-xs capitalize"
-    >
-      <span>{{ name }}</span>
-    </a>
+  <a
+    href="#"
+    @click.prevent="onClick"
+    :class="`${getTypeBgColor(name)} ${cssClass} ${getSize()}`"
+    class="text-center capitalize"
+  >
+    <span>{{ name }}</span>
+  </a>
 </template>
 
 <style scoped>
