@@ -23,23 +23,23 @@ const getTypeBgColor = (type: string) => {
     case 'dragon':
       return 'bg-dragon text-white'
     case 'electric':
-      return 'bg-[#eed535] text-gray-600'
+      return 'bg-[#eed535] text-gray-800'
     case 'fairy':
-      return 'bg-[#fdb9e9] text-gray-600'
+      return 'bg-[#fdb9e9] text-gray-800'
     case 'fighting':
       return 'bg-[#d56723] text-white'
     case 'fire':
       return 'bg-[#fd7d24] text-white'
     case 'flying':
-      return 'bg-flying text-gray-600'
+      return 'bg-flying text-gray-800'
     case 'ghost':
       return 'bg-[#7b62a3] text-white'
     case 'grass':
-      return 'bg-[#9bcc50] text-gray-600'
+      return 'bg-[#9bcc50] text-white'
     case 'ground':
-      return 'bg-ground text-gray-600'
+      return 'bg-ground text-gray-800'
     case 'ice':
-      return 'bg-[#51c4e7] text-gray-600'
+      return 'bg-[#51c4e7] text-gray-800'
     case 'poison':
       return 'bg-[#b97fc9] text-white'
     case 'psychic':
@@ -47,11 +47,11 @@ const getTypeBgColor = (type: string) => {
     case 'rock':
       return 'bg-[#a38c21] text-white'
     case 'steel':
-      return 'bg-[#9eb7b8] text-gray-600'
+      return 'bg-[#9eb7b8] text-gray-800'
     case 'water':
       return 'bg-[#4592c4] text-white'
     default:
-      return 'bg-[#a4acaf] text-gray-600'
+      return 'bg-[#a4acaf] text-white'
   }
 }
 
