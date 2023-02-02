@@ -53,7 +53,7 @@ const loadMore = () => {
 <template>
   <div>
     <div
-      v-if="response?.results && response?.results.length < 1"
+      v-if="response?.results && response?.results.length < 1 && !loading"
       class="mx-auto max-w-5xl py-6 px-4"
     >
       <p class="text-center">No Pokémon matched your search.</p>
