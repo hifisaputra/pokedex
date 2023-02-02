@@ -115,7 +115,7 @@ export const useFetchPokemon = () => {
       let paginated = data.splice(offset, limit)
       paginated = await fetchPokemonData(paginated)
 
-      paginated.forEach(item => {
+      paginated.forEach((item) => {
         result.response?.results.push(item)
       })
       result.response.count = data.length
@@ -133,7 +133,7 @@ export const useFetchPokemon = () => {
         response.results = await fetchPokemonData(response.results)
         result.response.count = response.count
 
-        response.results.forEach(item => {
+        response.results.forEach((item) => {
           result.response?.results.push(item)
         })
       }

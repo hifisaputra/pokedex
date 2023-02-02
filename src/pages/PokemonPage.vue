@@ -29,7 +29,9 @@ const onClickFavourite = (pokemon: Pokemon) => {
 }
 
 const thumbnail = computed(() => {
-  return (response.value && response.value.sprites?.front_default) ? response.value.sprites?.front_default : '/no-image.png'
+  return response.value && response.value.sprites?.front_default
+    ? response.value.sprites?.front_default
+    : '/no-image.png'
 })
 </script>
 
@@ -37,55 +39,55 @@ const thumbnail = computed(() => {
   <div class="mx-auto max-w-5xl py-10 px-4">
     <div class="grid grid-cols-1 md:grid-cols-2">
       <div class="flex">
-      <div class="mr-4">
-        <img
-          class="rounded-lg bg-gray-200 py-4 px-4"
-          :src="thumbnail"
-          alt=""
-        />
-      </div>
-      <div>
-        <h5 class="text-2xl font-bold capitalize">
-          {{ response?.name }}
-          <span class="text-base text-gray-500"
-            >#{{ ('000' + response?.id).slice(-4) }}</span
-          >
-        </h5>
+        <div class="mr-4">
+          <img
+            class="rounded-lg bg-gray-200 py-4 px-4"
+            :src="thumbnail"
+            alt=""
+          />
+        </div>
+        <div>
+          <h5 class="text-2xl font-bold capitalize">
+            {{ response?.name }}
+            <span class="text-base text-gray-500"
+              >#{{ ('000' + response?.id).slice(-4) }}</span
+            >
+          </h5>
 
-        <div class="mt-4">
-          <div class="mt-2 flex flex-wrap">
-            <TypePill
-              v-for="item in response?.types"
-              :key="item.type.name"
-              :name="item.type.name"
-              class="mr-2"
-            />
+          <div class="mt-4">
+            <div class="mt-2 flex flex-wrap">
+              <TypePill
+                v-for="item in response?.types"
+                :key="item.type.name"
+                :name="item.type.name"
+                class="mr-2"
+              />
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <a
+              href=""
+              @click.prevent="onClickFavourite(response as Pokemon)"
+              class="rounded-md px-4 py-1 text-sm text-white"
+              :class="isFavourite ? 'bg-orange-800' : 'bg-orange-600'"
+              >{{ isFavourite ? 'Favourited' : 'Favourite' }}</a
+            >
           </div>
         </div>
+      </div>
 
-        <div class="mt-4">
-          <a
-            href=""
-            @click.prevent="onClickFavourite(response as Pokemon)"
-            class="rounded-md px-4 py-1 text-sm text-white"
-            :class="isFavourite ? 'bg-orange-800' : 'bg-orange-600'"
-            >{{ isFavourite ? 'Favourited' : 'Favourite' }}</a
-          >
+      <div class="mt-10 rounded-lg bg-gray-400 py-4 px-4 md:mt-0">
+        <h5>Stats</h5>
+        <div class="mt-3 grid grid-cols-6 gap-2">
+          <PokemonStat
+            v-for="item in response?.stats"
+            :key="item.stat.name"
+            :name="item.stat.name"
+            :value="item.base_stat"
+          />
         </div>
       </div>
-    </div>
-
-    <div class="mt-10 md:mt-0 rounded-lg bg-gray-400 py-4 px-4">
-      <h5>Stats</h5>
-      <div class="mt-3 grid grid-cols-6 gap-2">
-        <PokemonStat
-          v-for="item in response?.stats"
-          :key="item.stat.name"
-          :name="item.stat.name"
-          :value="item.base_stat"
-        />
-      </div>
-    </div>
     </div>
 
     <div class="mt-10">
