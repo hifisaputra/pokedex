@@ -32,6 +32,34 @@ export interface Pokemon {
       name: string
     }
   }[]
+  species?: PokemonSpecies
+  evolution?: Evolution[]
+}
+
+interface PokemonSpecies {
+  flavor_text_entries?: {
+    flavor_text: string
+    language: {
+      name: string
+    }
+    version: {
+      name: string
+    }
+  }[]
+  evolution_chain?: {
+    url: string
+  }
+}
+
+export interface Evolution {
+  species: {
+    id?: number
+    name: string
+    url: string
+    sprites?: {
+      front_default?: string
+    }
+  }
 }
 
 /**
@@ -161,13 +189,86 @@ export const useGetPokemon = () => {
   const call = async (id: number | string) => {
     result.loading = true
 
-    const { response } = await apiCall<Pokemon>({
-      url: `/pokemon/${id}`,
-      method: 'GET'
-    })
-    if (response) result.response = response
+    const pokemonData = await getPokemonById(id)
+    if (pokemonData) result.response = pokemonData
+
+    const speciesData = await getSpeciesData(id)
+    if (speciesData && result.response) {
+      result.response.species = speciesData
+
+      if (speciesData.evolution_chain) {
+        const evolutionData = await getEvolutionData(
+          speciesData.evolution_chain?.url
+        )
+        if (evolutionData) result.response.evolution = evolutionData
+      }
+    }
+
     result.loading = false
   }
 
   return { ...toRefs(result), call }
+}
+
+/**
+ * @description Function to fetch pokemon species data.
+ *
+ * @param {string|number} id
+ * @returns {Promise<PokemonSpecies>}
+ */
+const getSpeciesData = async (id: string | number) => {
+  const { response } = await apiCall<PokemonSpecies>({
+    url: `/pokemon-species/${id}`
+  })
+
+  return response
+}
+
+const getPokemonById = async (id: string | number) => {
+  const { response } = await apiCall<Pokemon>({
+    url: `/pokemon/${id}`,
+    method: 'GET'
+  })
+
+  return response
+}
+
+const getPokemonByUrl = async (url: string) => {
+  const { response } = await apiCall<Pokemon>({
+    url
+  })
+
+  return response
+}
+
+const getEvolutionData = async (url: string) => {
+  const { response } = await apiCall<any>({
+    url
+  })
+  const data: Evolution[] = []
+  let nestedEvolutionData = response.chain
+
+  while (nestedEvolutionData && nestedEvolutionData.evolves_to) {
+    data.push({
+      species: nestedEvolutionData.species
+    })
+
+    nestedEvolutionData = nestedEvolutionData.evolves_to[0]
+  }
+
+  const pokemonData = await Promise.all(
+    data.map((item) =>
+      getPokemonByUrl(item.species.url.replace('pokemon-species', 'pokemon'))
+    )
+  )
+  if (pokemonData) {
+    pokemonData.forEach((item, index) => {
+      data[index].species.sprites = item?.sprites
+      data[index].species.id = item?.id
+    })
+  }
+
+  console.log(data)
+
+  return data
 }
