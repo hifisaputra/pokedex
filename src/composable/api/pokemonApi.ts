@@ -6,6 +6,8 @@ export interface Pokemon {
   id?: number
   name: string
   url: string
+  height?: number,
+  weight?: number,
   sprites?: {
     front_default?: string
   }
@@ -13,16 +15,38 @@ export interface Pokemon {
     type: {
       name: string
     }
+  }[],
+  abilities?: {
+    ability: {
+      name: string
+    }
+  }[],
+  moves?: {
+    move: {
+      name: string
+    }
+  }[],
+  stats?: {
+    base_stat: number,
+    stat: {
+      name: string
+    }
   }[]
 }
 
-// since the /pokemon endpoint only returns the pokemon name and url,
-// we need loop throung the results and send an API call
-// for each pokemon to different endpoint which is /pokemon/{id}
-// to get the image, name, id and other detail data.
-// we will only get the ones that are being displayed so that
-// the app does not run slow.
-const fetchPokemonData = async (pokemons: Pokemon[]) => {
+/**
+ * @description Method to fetch the detailed pokemon data, given an array of Pokemon.
+ * since the /pokemon endpoint only returns the pokemon name and url,
+ * we need loop throung the results and send an API call
+ * for each pokemon to different endpoint which is /pokemon/{id}
+ * to get the image, name, id and other detail data.
+ * we will only get the ones that are being displayed so that
+ * the app does not run slow.
+ *
+ * @param {Pokemon} pokemons
+ * @returns {Promise<Pokemon[]>}
+ */
+const fetchPokemonData = async (pokemons: Pokemon[]): Promise<Pokemon[]> => {
   const promises = pokemons.map((item) =>
     apiCall<Pokemon>({
       url: item.url,
@@ -40,6 +64,11 @@ const fetchPokemonData = async (pokemons: Pokemon[]) => {
   return data
 }
 
+/**
+ * @description Vue composable to fetch list of pokemon data.
+ *
+ * @returns
+ */
 export const useFetchPokemon = () => {
   const result = reactive<{
     loading: boolean
@@ -70,7 +99,7 @@ export const useFetchPokemon = () => {
       const typeData = await apiCall<PokemonType>({ url: types })
 
       let data: Pokemon[] = []
-      if(typeData.response) {
+      if (typeData.response) {
         typeData.response.pokemon?.forEach((pokemon) => {
           data.push(pokemon.pokemon)
         })
@@ -98,16 +127,47 @@ export const useFetchPokemon = () => {
       if (response) {
         response.results = await fetchPokemonData(response.results)
 
-        if(offset === 0) result.response = {
-          count: limit,
-          next: '',
-          previous: '',
-          results: []
-        }
+        if (offset === 0)
+          result.response = {
+            count: limit,
+            next: '',
+            previous: '',
+            results: []
+          }
 
         result.response = response
       }
     }
+    result.loading = false
+  }
+
+  return { ...toRefs(result), call }
+}
+
+/**
+ * @description Vue composable to fetch the specified pokemon data
+ *
+ * @returns
+ */
+export const useGetPokemon = () => {
+  const result = reactive<{
+    loading: boolean
+    error: RequestError | null
+    response: Pokemon | null
+  }>({
+    loading: false,
+    error: null,
+    response: null
+  })
+
+  const call = async (id: number | string) => {
+    result.loading = true
+
+    const { response } = await apiCall<Pokemon>({
+      url: `/pokemon/${id}`,
+      method: 'GET'
+    })
+    if (response) result.response = response
     result.loading = false
   }
 

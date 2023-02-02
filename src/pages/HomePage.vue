@@ -34,10 +34,10 @@ const filter = () => {
       <a
         href=""
         @click.prevent="showFilterBar = true"
-        class="fixed bottom-10 right-[50%] translate-x-[50%] rounded-full bg-gray-700 px-5 py-1 text-sm text-white z-40"
+        class="fixed bottom-10 right-[50%] z-40 translate-x-[50%] rounded-full bg-gray-700 px-5 py-1 text-sm text-white"
         >Filter</a
       >
-      <div v-if="showFilterBar" class="fixed inset-0 bg-white px-4 py-8 z-40">
+      <div v-if="showFilterBar" class="fixed inset-0 z-40 bg-white px-4 py-8">
         <div class="flex items-start justify-between">
           <div>
             <h5 class="text-lg font-semibold">Filter</h5>
@@ -57,8 +57,13 @@ const filter = () => {
       </div>
 
       <div class="relative">
-        <div v-if="loading" class="absolute inset-0 flex justify-center items-center z-50 bg-white bg-opacity-70"><img src="/spinner.svg" alt="" /></div>
-        <div class="grid grid-cols-3 gap-2 relative">
+        <div
+          v-if="loading"
+          class="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70"
+        >
+          <img src="/spinner.svg" alt="" />
+        </div>
+        <div class="relative grid grid-cols-3 gap-2">
           <PokemonCard
             v-for="pokemon in response?.results"
             :key="pokemon.name"
@@ -66,7 +71,6 @@ const filter = () => {
           />
         </div>
       </div>
-
     </div>
   </div>
 </template>
