@@ -52,13 +52,10 @@ const loadMore = () => {
 
 <template>
   <div>
-    <div
-      v-if="response?.results && response?.results.length < 1 && !loading"
-      class="mx-auto max-w-5xl py-6 px-4"
-    >
-      <p class="text-center">No Pokémon matched your search.</p>
-    </div>
-    <div class="mx-auto max-w-5xl py-6 px-4">
+    <div class="mx-auto max-w-5xl py-6 px-4 bg-white min-h-screen">
+      <div v-if="response?.results && response?.results.length < 1 && !loading">
+        <p class="text-center">No Pokémon matched your search.</p>
+      </div>
       <a
         href=""
         @click.prevent="showFilterBar = true"
@@ -108,5 +105,6 @@ const loadMore = () => {
         </div>
       </div>
     </div>
+
   </div>
 </template>

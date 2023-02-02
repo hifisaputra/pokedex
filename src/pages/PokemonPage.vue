@@ -36,12 +36,12 @@ const thumbnail = computed(() => {
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl py-10 px-4">
+  <div class="mx-auto max-w-5xl py-6 px-6 bg-white min-h-screen md:px-20 md:py-10">
     <div class="grid grid-cols-1 md:grid-cols-2">
       <div class="flex">
         <div class="mr-4">
           <img
-            class="rounded-lg bg-gray-200 py-4 px-4"
+            class="rounded-2xl bg-[#D9D9D9] py-4 px-4"
             :src="thumbnail"
             alt=""
           />
@@ -54,8 +54,9 @@ const thumbnail = computed(() => {
             >
           </h5>
 
-          <div class="mt-4">
-            <div class="mt-2 flex flex-wrap">
+          <div class="mt-2">
+            <p class="font-semibold">Type</p>
+            <div class="flex flex-wrap">
               <TypePill
                 v-for="item in response?.types"
                 :key="item.type.name"
@@ -77,9 +78,9 @@ const thumbnail = computed(() => {
         </div>
       </div>
 
-      <div class="mt-10 rounded-lg bg-gray-400 py-4 px-4 md:mt-0">
-        <h5>Stats</h5>
-        <div class="mt-3 grid grid-cols-6 gap-2">
+      <div class="mt-8 rounded-lg bg-gray-300 py-4 px-4 md:mt-0">
+        <h5 class="font-semibold">Stats</h5>
+        <div class="mt-3">
           <PokemonStat
             v-for="item in response?.stats"
             :key="item.stat.name"

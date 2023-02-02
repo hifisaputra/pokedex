@@ -16,8 +16,10 @@ const thumbnail = computed(() => {
 
 <template>
   <RouterLink :to="{ name: 'pokemon', params: { id: pokemon.id } }">
-    <img :src="thumbnail" alt="" class="mx-auto mt-2 rounded-md bg-gray-300" />
-    <div class="px-2 pb-2">
+    <div class="relative w-full pt-[100%]">
+      <img :src="thumbnail" alt="" class="rounded-2xl bg-[#D9D9D9] absolute inset-0 w-full h-auto" />
+    </div>
+    <div class="pb-2">
       <span class="text-xs text-gray-500"
         >#{{ ('000' + pokemon.id).slice(-4) }}</span
       >

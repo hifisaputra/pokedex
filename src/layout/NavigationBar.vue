@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-white py-4 shadow">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-4">
+  <div class="bg-white py-4 shadow border-b">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-6">
       <RouterLink :to="{ name: 'home' }" class="text-xl font-bold">
         Pokédex
       </RouterLink>

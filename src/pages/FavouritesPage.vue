@@ -12,13 +12,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <div
-      v-if="favouriteStore.favourites.length < 1"
-      class="mx-auto max-w-5xl py-6 px-4"
-    >
-      <p class="text-center">You don't have favourite Pokémon.</p>
-    </div>
-    <div class="mx-auto max-w-5xl py-5 px-4">
+    <div class="mx-auto max-w-5xl py-6 px-4 bg-white min-h-screen">
+      <div v-if="favouriteStore.favourites.length < 1">
+        <p class="text-center">You don't have favourite Pokémon.</p>
+      </div>
+
       <div
         class="relative grid grid-cols-3 gap-2 sm:grid-cols-6 md:grid-cols-8"
       >
