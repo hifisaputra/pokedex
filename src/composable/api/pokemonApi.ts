@@ -126,11 +126,11 @@ export const useFetchPokemon = () => {
       // but this endpoint only receive one type at a time, so when user selects more than one type
       // we need to make API call for each type and combine the result.
       //
-      // Update: Changed to only filter with one type, with the current API it wont be possible to get the pokemon
+      // Update: Changed to only filter with one type, with the current API it wont be possible to get pokemons
       // with exact type specified by user if there are more than one types selected.
       // unless we fetch all of the pokemon data for each type result. And doing so would make the app unstable or slow
       // since when user selected 2 types the result can be between 150 to 250,
-      // meaning we would be doing 150 to 250 request at one tinnee.
+      // meaning we would be doing 150 to 250 request at one time.
       const typeData = await apiCall<PokemonType>({ url: types })
 
       const data: Pokemon[] = []
@@ -224,6 +224,12 @@ const getSpeciesData = async (id: string | number) => {
   return response
 }
 
+/**
+ * @description Function to fetch pokemon by ID.
+ *
+ * @param {string|number} id
+ * @returns {Promise<Pokemon>}
+ */
 const getPokemonById = async (id: string | number) => {
   const { response } = await apiCall<Pokemon>({
     url: `/pokemon/${id}`,
@@ -233,6 +239,12 @@ const getPokemonById = async (id: string | number) => {
   return response
 }
 
+/**
+ * @description Function to fetch pokemon by url.
+ *
+ * @param {string} url
+ * @returns {Promise<Pokemon>}
+ */
 const getPokemonByUrl = async (url: string) => {
   const { response } = await apiCall<Pokemon>({
     url
@@ -241,6 +253,13 @@ const getPokemonByUrl = async (url: string) => {
   return response
 }
 
+
+/**
+ * @description Function to fetch pokemon evolution data.
+ *
+ * @param {string} url
+ * @returns {Promise<Evolution[]>}
+ */
 const getEvolutionData = async (url: string) => {
   const { response } = await apiCall<any>({
     url
@@ -267,8 +286,6 @@ const getEvolutionData = async (url: string) => {
       data[index].species.id = item?.id
     })
   }
-
-  console.log(data)
 
   return data
 }
