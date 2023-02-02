@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div>
+  <RouterLink :to="{ name: 'pokemon', params: { id: pokemon.id }}">
     <img
       :src="pokemon.sprites?.front_default"
       alt=""
@@ -28,5 +28,5 @@ const props = defineProps<{
         />
       </div>
     </div>
-  </div>
+  </RouterLink>
 </template>
