@@ -27,15 +27,20 @@ const isFavourite = computed(() => {
 const onClickFavourite = (pokemon: Pokemon) => {
   if (pokemon) favouriteStore.toggleFavourite(pokemon)
 }
+
+const thumbnail = computed(() => {
+  return (response.value && response.value.sprites?.front_default) ? response.value.sprites?.front_default : '/no-image.png'
+})
 </script>
 
 <template>
   <div class="mx-auto max-w-5xl py-10 px-4">
-    <div class="flex">
+    <div class="grid grid-cols-1 md:grid-cols-2">
+      <div class="flex">
       <div class="mr-4">
         <img
           class="rounded-lg bg-gray-200 py-4 px-4"
-          :src="response?.sprites?.front_default"
+          :src="thumbnail"
           alt=""
         />
       </div>
@@ -70,7 +75,7 @@ const onClickFavourite = (pokemon: Pokemon) => {
       </div>
     </div>
 
-    <div class="mt-10 rounded-lg bg-gray-400 py-4 px-4">
+    <div class="mt-10 md:mt-0 rounded-lg bg-gray-400 py-4 px-4">
       <h5>Stats</h5>
       <div class="mt-3 grid grid-cols-6 gap-2">
         <PokemonStat
@@ -80,6 +85,7 @@ const onClickFavourite = (pokemon: Pokemon) => {
           :value="item.base_stat"
         />
       </div>
+    </div>
     </div>
 
     <div class="mt-10">
@@ -96,7 +102,7 @@ const onClickFavourite = (pokemon: Pokemon) => {
     </div>
     <div class="mt-10">
       <span class="text-sm font-semibold">Moves</span> <br />
-      <ul class="grid list-disc grid-cols-2 pl-6">
+      <ul class="grid list-disc grid-cols-2 pl-6 sm:grid-cols-4 md:grid-cols-5">
         <li
           v-for="item in response?.moves"
           :key="item.move.name"

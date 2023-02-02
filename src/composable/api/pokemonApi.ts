@@ -66,8 +66,6 @@ const fetchPokemonData = async (pokemons: Pokemon[]): Promise<Pokemon[]> => {
 
 /**
  * @description Vue composable to fetch list of pokemon data.
- *
- * @returns
  */
 export const useFetchPokemon = () => {
   const result = reactive<{
@@ -81,8 +79,17 @@ export const useFetchPokemon = () => {
   })
 
   const call = async (limit = 10, offset = 0, types = '') => {
-    result.loading = true
+    console.log('call', limit, offset, result.loading)
+    if (offset === 0 || !result.response) {
+      result.response = {
+        count: limit,
+        next: '',
+        previous: '',
+        results: []
+      }
+    }
 
+    result.loading = true
     if (types.length > 0) {
       // the types parameter has data, meaning user want to fetch pokemon with specified types.
       // since PokeAPI does not provide any means of filtering data in the /pokemon endpoint,
@@ -98,22 +105,20 @@ export const useFetchPokemon = () => {
       // meaning we would be doing 150 to 250 request at one tinnee.
       const typeData = await apiCall<PokemonType>({ url: types })
 
-      let data: Pokemon[] = []
+      const data: Pokemon[] = []
       if (typeData.response) {
         typeData.response.pokemon?.forEach((pokemon) => {
           data.push(pokemon.pokemon)
         })
       }
 
-      data = data.splice(offset, limit)
-      data = await fetchPokemonData(data)
+      let paginated = data.splice(offset, limit)
+      paginated = await fetchPokemonData(paginated)
 
-      result.response = {
-        count: limit,
-        next: '',
-        previous: '',
-        results: data
-      }
+      paginated.forEach(item => {
+        result.response?.results.push(item)
+      })
+      result.response.count = data.length
     } else {
       const { response } = await apiCall<FetchResponse<Pokemon>>({
         url: '/pokemon',
@@ -126,16 +131,11 @@ export const useFetchPokemon = () => {
 
       if (response) {
         response.results = await fetchPokemonData(response.results)
+        result.response.count = response.count
 
-        if (offset === 0)
-          result.response = {
-            count: limit,
-            next: '',
-            previous: '',
-            results: []
-          }
-
-        result.response = response
+        response.results.forEach(item => {
+          result.response?.results.push(item)
+        })
       }
     }
     result.loading = false
@@ -146,8 +146,6 @@ export const useFetchPokemon = () => {
 
 /**
  * @description Vue composable to fetch the specified pokemon data
- *
- * @returns
  */
 export const useGetPokemon = () => {
   const result = reactive<{

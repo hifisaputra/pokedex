@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useFetchPokemon } from '../composable/api/pokemonApi'
 import TypeFilter from '../components/TypeFilter.vue'
 import PokemonCard from '../components/PokemonCard.vue'
@@ -8,14 +8,29 @@ const { loading, response, call } = useFetchPokemon()
 
 const params = ref({
   types: '',
-  limit: 12,
+  limit: 32,
   offset: 0
 })
 const showFilterBar = ref(false)
+const scrollComponent = ref<any>(null)
 
 onMounted(() => {
   fetchPokemon()
+  window.addEventListener('scroll', handleScroll)
 })
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
+const handleScroll = () => {
+  let element = scrollComponent.value
+
+  if (!element) return
+  if (element.getBoundingClientRect().bottom < window.innerHeight) {
+    loadMore()
+  }
+}
 
 const fetchPokemon = () => {
   call(params.value.limit, params.value.offset, params.value.types)
@@ -26,11 +41,21 @@ const filter = () => {
   fetchPokemon()
   showFilterBar.value = false
 }
+
+const loadMore = () => {
+  if(loading.value) return
+  params.value.offset = params.value.offset + params.value.limit
+  if(response.value && response.value?.count <= params.value.offset) return
+  fetchPokemon()
+}
 </script>
 
 <template>
   <div>
-    <div class="mx-auto max-w-5xl py-10 px-4">
+    <div v-if="response?.results && response?.results.length < 1" class="mx-auto max-w-5xl py-6 px-4">
+      <p class="text-center">No Pokémon matched your search.</p>
+    </div>
+    <div class="mx-auto max-w-5xl py-6 px-4">
       <a
         href=""
         @click.prevent="showFilterBar = true"
@@ -38,7 +63,8 @@ const filter = () => {
         >Filter</a
       >
       <div v-if="showFilterBar" class="fixed inset-0 z-40 bg-white px-4 py-8">
-        <div class="flex items-start justify-between">
+        <div class="mx-auto max-w-5xl">
+          <div class="flex items-start justify-between">
           <div>
             <h5 class="text-lg font-semibold">Filter</h5>
             <span class="text-xs text-gray-500">Search Pokémon by type</span>
@@ -54,21 +80,26 @@ const filter = () => {
           class="block w-full rounded-md bg-orange-600 py-3 text-center text-white hover:bg-orange-700"
           >Search</a
         >
+        </div>
       </div>
 
       <div class="relative">
         <div
-          v-if="loading"
-          class="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70"
+          v-if="loading && response?.results && response?.results.length < 1"
+          class="absolute py-10 inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70"
         >
           <img src="/spinner.svg" alt="" />
         </div>
-        <div class="relative grid grid-cols-3 gap-2">
-          <PokemonCard
-            v-for="pokemon in response?.results"
-            :key="pokemon.name"
+        <div class="relative grid grid-cols-3 sm:grid-cols-6 gap-2 md:grid-cols-8" ref="scrollComponent">
+          <div v-for="(pokemon) in response?.results"
+            :key="pokemon.name">
+            <PokemonCard
             :pokemon="pokemon"
           />
+          </div>
+        </div>
+        <div v-if="loading && response?.results && response?.results.length > 0">
+          <img class="mx-auto mb-16" src="/spinner.svg" alt="" />
         </div>
       </div>
     </div>

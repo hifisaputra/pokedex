@@ -6,10 +6,7 @@
       </RouterLink>
 
       <div>
-        <RouterLink
-          :to="{ name: 'favourites' }"
-          class="font-semibold hover:bg-red-600"
-        >
+        <RouterLink :to="{ name: 'favourites' }" class="font-semibold">
           Favourites
         </RouterLink>
       </div>
