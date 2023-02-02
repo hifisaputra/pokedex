@@ -36,7 +36,9 @@ const thumbnail = computed(() => {
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl py-6 px-6 bg-white min-h-screen md:px-20 md:py-10">
+  <div
+    class="mx-auto min-h-screen max-w-5xl bg-white py-6 px-6 md:px-20 md:py-10"
+  >
     <div class="grid grid-cols-1 md:grid-cols-2">
       <div class="flex">
         <div class="mr-4">

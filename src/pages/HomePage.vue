@@ -52,7 +52,7 @@ const loadMore = () => {
 
 <template>
   <div>
-    <div class="mx-auto max-w-5xl py-6 px-4 bg-white min-h-screen">
+    <div class="mx-auto min-h-screen max-w-5xl bg-white py-6 px-4">
       <div v-if="response?.results && response?.results.length < 1 && !loading">
         <p class="text-center">No Pokémon matched your search.</p>
       </div>
@@ -105,6 +105,5 @@ const loadMore = () => {
         </div>
       </div>
     </div>
-
   </div>
 </template>

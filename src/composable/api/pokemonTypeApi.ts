@@ -13,6 +13,9 @@ export interface PokemonType {
   }[]
 }
 
+/**
+ * @description Vue composable to fetch the specified pokemon data
+ */
 export const useFetchType = () => {
   const result = reactive<{
     loading: boolean
