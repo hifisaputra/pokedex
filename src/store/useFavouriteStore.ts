@@ -3,6 +3,12 @@ import { ref } from 'vue'
 import { Pokemon } from '../composable/api/pokemonApi'
 import { writeToStorage, readFromStorage } from '../lib/localStorage'
 
+/**
+ * @description Store to save all of user's favourite pokemon data.
+ * Since we don't have backend to store all the data,
+ * we will use local storate instead.
+ * The data will be saved in JSON format.
+ */
 export const useFavouriteStore = defineStore('favourites', () => {
   const favourites = ref<Pokemon[]>([])
 
