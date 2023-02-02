@@ -14,8 +14,18 @@ const params = ref({
 const showFilterBar = ref(false)
 
 onMounted(() => {
-  call(params.value.limit, params.value.offset, params.value.types)
+  fetchPokemon()
 })
+
+const fetchPokemon = () => {
+  call(params.value.limit, params.value.offset, params.value.types)
+}
+
+const filter = () => {
+  params.value.offset = 0
+  fetchPokemon()
+  showFilterBar.value = false
+}
 </script>
 
 <template>
@@ -31,7 +41,7 @@ onMounted(() => {
         <div class="flex items-start justify-between">
           <div>
             <h5 class="text-lg font-semibold">Filter</h5>
-            <span class="text-xs text-gray-500">Search Pokémon by types</span>
+            <span class="text-xs text-gray-500">Search Pokémon by types (max 2 selection, since Pokémon can only have either one or two types)</span>
           </div>
           <a href="" @click.prevent="showFilterBar = false">
             <img src="/x-icon.svg" alt="Close Icon" class="w-6" />
@@ -40,8 +50,9 @@ onMounted(() => {
         <TypeFilter v-model="params.types" class="mt-4 mb-6" />
         <a
           href=""
+          @click.prevent="filter"
           class="block w-full rounded-md bg-orange-600 py-3 text-center text-white hover:bg-orange-700"
-          >Apply</a
+          >Apply Filter ({{ params.types.length }})</a
         >
       </div>
 

@@ -10,7 +10,7 @@ const props = defineProps<{
 <template>
   <div>
     <img
-      :src="pokemon.sprites.front_default"
+      :src="pokemon.sprites?.front_default"
       alt=""
       class="mx-auto mt-2 rounded-md bg-gray-300"
     />

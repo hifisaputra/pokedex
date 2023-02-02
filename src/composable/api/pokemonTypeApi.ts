@@ -2,8 +2,15 @@ import { reactive, toRefs } from 'vue'
 import { RequestError, FetchResponse, apiCall } from '../../lib/axios'
 
 export interface PokemonType {
+  id?: number
   name: string
   url: string
+  pokemon?: {
+    pokemon: {
+      name: string
+      url: string
+    }
+  }[]
 }
 
 export const useFetchType = () => {
