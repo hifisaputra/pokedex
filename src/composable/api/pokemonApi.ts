@@ -6,8 +6,8 @@ export interface Pokemon {
   id?: number
   name: string
   url: string
-  height?: number,
-  weight?: number,
+  height?: number
+  weight?: number
   sprites?: {
     front_default?: string
   }
@@ -15,19 +15,19 @@ export interface Pokemon {
     type: {
       name: string
     }
-  }[],
+  }[]
   abilities?: {
     ability: {
       name: string
     }
-  }[],
+  }[]
   moves?: {
     move: {
       name: string
     }
-  }[],
+  }[]
   stats?: {
-    base_stat: number,
+    base_stat: number
     stat: {
       name: string
     }

@@ -1,23 +1,43 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useGetPokemon } from '../composable/api/pokemonApi'
+import { useGetPokemon, Pokemon } from '../composable/api/pokemonApi'
+import { useFavouriteStore } from '../store/useFavouriteStore'
 import PokemonStat from '../components/PokemonStat.vue'
 import TypePill from '../components/TypePill.vue'
 
 const route = useRoute()
 const { response, call } = useGetPokemon()
 
+const favouriteStore = useFavouriteStore()
+
 onMounted(() => {
   call(route.params.id as string)
+  favouriteStore.fetchFavourites()
 })
+
+const isFavourite = computed(() => {
+  const itemIndex = favouriteStore.favourites.findIndex(
+    (item) => item.name === response.value?.name
+  )
+
+  return itemIndex > -1
+})
+
+const onClickFavourite = (pokemon: Pokemon) => {
+  if (pokemon) favouriteStore.toggleFavourite(pokemon)
+}
 </script>
 
 <template>
   <div class="mx-auto max-w-5xl py-10 px-4">
-    <div class="flex ">
-      <div class="mr-4 ">
-        <img class="bg-gray-200 py-4 px-4 rounded-lg" :src="response?.sprites?.front_default" alt="" />
+    <div class="flex">
+      <div class="mr-4">
+        <img
+          class="rounded-lg bg-gray-200 py-4 px-4"
+          :src="response?.sprites?.front_default"
+          alt=""
+        />
       </div>
       <div>
         <h5 class="text-2xl font-bold capitalize">
@@ -28,37 +48,60 @@ onMounted(() => {
         </h5>
 
         <div class="mt-4">
-          <div class="flex flex-wrap mt-2">
-            <TypePill v-for="item in response?.types" :key="item.type.name" :name="item.type.name" class="mr-2" />
+          <div class="mt-2 flex flex-wrap">
+            <TypePill
+              v-for="item in response?.types"
+              :key="item.type.name"
+              :name="item.type.name"
+              class="mr-2"
+            />
           </div>
         </div>
 
         <div class="mt-4">
-          <a href="" class="text-sm px-4 py-2 bg-orange-600 text-white rounded-md">Favourite</a>
+          <a
+            href=""
+            @click.prevent="onClickFavourite(response as Pokemon)"
+            class="rounded-md px-4 py-1 text-sm text-white"
+            :class="isFavourite ? 'bg-orange-800' : 'bg-orange-600'"
+            >{{ isFavourite ? 'Favourited' : 'Favourite' }}</a
+          >
         </div>
-
       </div>
     </div>
 
-    <div class="mt-10 bg-gray-400 py-4 px-4 rounded-lg">
+    <div class="mt-10 rounded-lg bg-gray-400 py-4 px-4">
       <h5>Stats</h5>
-      <div class="grid grid-cols-6 gap-2 mt-3">
-        <PokemonStat v-for="item in response?.stats" :key="item.stat.name" :name="item.stat.name" :value="item.base_stat" />
+      <div class="mt-3 grid grid-cols-6 gap-2">
+        <PokemonStat
+          v-for="item in response?.stats"
+          :key="item.stat.name"
+          :name="item.stat.name"
+          :value="item.base_stat"
+        />
       </div>
     </div>
 
     <div class="mt-10">
-      <span class="font-semibold text-sm">Abilities</span> <br>
+      <span class="text-sm font-semibold">Abilities</span> <br />
       <ul class="list-disc pl-6">
-        <li v-for="item in response?.abilities" :key="item.ability.name" class="capitalize text-sm">
+        <li
+          v-for="item in response?.abilities"
+          :key="item.ability.name"
+          class="text-sm capitalize"
+        >
           {{ item.ability.name }}
         </li>
       </ul>
     </div>
     <div class="mt-10">
-      <span class="font-semibold text-sm">Moves</span> <br>
-      <ul class="list-disc pl-6 grid grid-cols-2">
-        <li v-for="item in response?.moves" :key="item.move.name" class="capitalize text-sm">
+      <span class="text-sm font-semibold">Moves</span> <br />
+      <ul class="grid list-disc grid-cols-2 pl-6">
+        <li
+          v-for="item in response?.moves"
+          :key="item.move.name"
+          class="text-sm capitalize"
+        >
           {{ item.move.name }}
         </li>
       </ul>

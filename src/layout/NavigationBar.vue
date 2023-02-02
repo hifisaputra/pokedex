@@ -7,7 +7,7 @@
 
       <div>
         <RouterLink
-          :to="{ name: 'home' }"
+          :to="{ name: 'favourites' }"
           class="font-semibold hover:bg-red-600"
         >
           Favourites
