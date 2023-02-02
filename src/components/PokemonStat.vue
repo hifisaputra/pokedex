@@ -1,8 +1,12 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue'
+const props = defineProps<{
   value: number
   name: string
 }>()
+const valueInPercent = computed(() => {
+  return (props.value / 255) * 100
+})
 </script>
 
 <template>
@@ -16,11 +20,11 @@ defineProps<{
       <div class="col-span-6 block text-right">
         <div class="h-2 rounded-full bg-gray-700">
           <div
-            :style="{ width: `${value}%` }"
+            :style="{ width: `${valueInPercent}%` }"
             class="h-2 rounded-full bg-blue-400"
           ></div>
         </div>
-        <span class="text-xs">{{ value }}/100</span>
+        <span class="text-xs">{{ value }}/255</span>
       </div>
     </div>
   </div>
