@@ -107,7 +107,6 @@ export const useFetchPokemon = () => {
   })
 
   const call = async (limit = 10, offset = 0, types = '') => {
-    console.log('call', limit, offset, result.loading)
     if (offset === 0 || !result.response) {
       result.response = {
         count: limit,
@@ -252,7 +251,6 @@ const getPokemonByUrl = async (url: string) => {
 
   return response
 }
-
 
 /**
  * @description Function to fetch pokemon evolution data.

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed, ref } from 'vue'
+import { onMounted, computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useGetPokemon, Pokemon } from '../composable/api/pokemonApi'
 import { useFavouriteStore } from '../store/useFavouriteStore'
@@ -16,6 +16,13 @@ onMounted(() => {
   call(route.params.id as string)
   favouriteStore.fetchFavourites()
 })
+
+watch(
+  () => route.params,
+  (newParam) => {
+    call(newParam.id as string)
+  }
+)
 
 const isFavourite = computed(() => {
   const itemIndex = favouriteStore.favourites.findIndex(
