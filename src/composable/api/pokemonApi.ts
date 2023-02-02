@@ -51,7 +51,7 @@ export const useFetchPokemon = () => {
     response: null
   })
 
-  const call = async (limit = 10, offset = 0, types = []) => {
+  const call = async (limit = 10, offset = 0, types = '') => {
     result.loading = true
 
     if (types.length > 0) {
@@ -61,18 +61,20 @@ export const useFetchPokemon = () => {
       // which is the /type/{id} endpoint.
       // but this endpoint only receive one type at a time, so when user selects more than one type
       // we need to make API call for each type and combine the result.
-      const typeData = await Promise.all(
-        types.map((item) => apiCall<PokemonType>({ url: item }))
-      )
+      //
+      // Update: Changed to only filter with one type, with the current API it wont be possible to get the pokemon
+      // with exact type specified by user if there are more than one types selected.
+      // unless we fetch all of the pokemon data for each type result. And doing so would make the app unstable or slow
+      // since when user selected 2 types the result can be between 150 to 250,
+      // meaning we would be doing 150 to 250 request at one tinnee.
+      const typeData = await apiCall<PokemonType>({ url: types })
 
       let data: Pokemon[] = []
-      typeData.forEach(async (item) => {
-        if (item.response)
-          item.response.pokemon?.forEach((pokemon) => {
-            if (data.findIndex((i) => i.name === pokemon.pokemon.name) < 0)
-              data.push(pokemon.pokemon)
-          })
-      })
+      if(typeData.response) {
+        typeData.response.pokemon?.forEach((pokemon) => {
+          data.push(pokemon.pokemon)
+        })
+      }
 
       data = data.splice(offset, limit)
       data = await fetchPokemonData(data)

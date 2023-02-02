@@ -7,7 +7,7 @@ import PokemonCard from '../components/PokemonCard.vue'
 const { loading, response, call } = useFetchPokemon()
 
 const params = ref({
-  types: [],
+  types: '',
   limit: 12,
   offset: 0
 })
@@ -41,7 +41,7 @@ const filter = () => {
         <div class="flex items-start justify-between">
           <div>
             <h5 class="text-lg font-semibold">Filter</h5>
-            <span class="text-xs text-gray-500">Search Pokémon by types (max 2 selection, since Pokémon can only have either one or two types)</span>
+            <span class="text-xs text-gray-500">Search Pokémon by type</span>
           </div>
           <a href="" @click.prevent="showFilterBar = false">
             <img src="/x-icon.svg" alt="Close Icon" class="w-6" />
@@ -52,7 +52,7 @@ const filter = () => {
           href=""
           @click.prevent="filter"
           class="block w-full rounded-md bg-orange-600 py-3 text-center text-white hover:bg-orange-700"
-          >Apply Filter ({{ params.types.length }})</a
+          >Search</a
         >
       </div>
 

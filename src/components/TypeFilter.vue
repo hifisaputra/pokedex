@@ -5,7 +5,7 @@ import TypePill from './TypePill.vue'
 
 const props = defineProps<{
   class?: string
-  modelValue?: string[]
+  modelValue?: string
 }>()
 
 const { response, call } = useFetchType()
@@ -19,16 +19,7 @@ const cssClass = computed(() => props.class)
 const emit = defineEmits(['update:modelValue'])
 
 const onClick = (item: PokemonType) => {
-  let activeTypes = props.modelValue as string[]
-
-  if (activeTypes.includes(item.url)) {
-    activeTypes = activeTypes.filter((i) => i !== item.url)
-  } else {
-    if(activeTypes.length >= 2) return
-    activeTypes.push(item.url)
-  }
-
-  emit('update:modelValue', activeTypes)
+  emit('update:modelValue', item.url)
 }
 </script>
 
@@ -40,7 +31,7 @@ const onClick = (item: PokemonType) => {
       :key="item.name"
       :name="item.name"
       size="big"
-      :active="props.modelValue?.includes(item.url)"
+      :active="props.modelValue === item.url"
     />
   </div>
 </template>
